@@ -15,4 +15,11 @@ class Projet extends Model
     {
         return $this->belongsToMany(Technologie::class, 'projet_technologie');
     }
+
+    public function imageps()
+    {
+        return $this->hasMany(Imagep::class);
+    }
+    
+    
 }

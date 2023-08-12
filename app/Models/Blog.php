@@ -10,4 +10,12 @@ class Blog extends Model
     use HasFactory;
 
     protected $fillable = ['titre', 'contenu', 'image_accroche','images_illustration'];
+
+    public function imagebs()
+    {
+        return $this->hasMany(ImageB::class);
+    }
+    
+
+
 }

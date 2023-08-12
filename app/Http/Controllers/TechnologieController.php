@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Technologie;
-use App\Http\Requests\StoreTechnologieRequest;
-use App\Http\Requests\UpdateTechnologieRequest;
+use Illuminate\Http\Request;
 
 class TechnologieController extends Controller
 {
@@ -13,54 +12,110 @@ class TechnologieController extends Controller
      */
     public function index()
     {
-        //
+        $technologies = Technologie::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTechnologieRequest $request)
+    public function store(Request $request)
     {
-        //
+
+        try{
+
+            $request->validate([
+          
+                'nom' => 'required|string|max:255',
+                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+               
+            ]);
+         
+
+            $technologies =  new Technologie(); 
+        
+            $technologies->nom = $request->nom;
+           
+                // Traitement de l'image 'image_accroche'
+                    
+            $image = $request->file('image');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images/technologies'), $imageName);
+
+            $technologies->image = $imageName;
+
+    
+            $technologies->save();
+    
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "Technologie enregistrée avec succès",
+                "data" => $technologies
+            ]);
+
+        } catch(Exception $e){
+
+            return response()->json($e);
+        }
+        
     }
+
+
+
 
     /**
      * Display the specified resource.
      */
     public function show(Technologie $technologie)
     {
-        //
+        
+        try{
+
+            $technologie;
+
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "Technologie identifiée avec succès",
+                "data" => $technologie
+            ]);
+
+
+        }catch(Exception $e){
+            return response()->json($e);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Technologie $technologie)
-    {
-        //
-    }
+ 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTechnologieRequest $request, Technologie $technologie)
+    public function update(Request $request, Technologie $technologie)
     {
         //
     }
+
+
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Technologie $technologie)
     {
-        //
+        try{
+            
+            $technologie->delete();
+
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "Technologie supprimée avec succès",
+                "data" => $technologie
+            ]);
+
+        }catch(Exception $e){
+            return response()->json($e);
+        }
     }
 }

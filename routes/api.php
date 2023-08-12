@@ -1,7 +1,14 @@
 <?php
 
+use App\Http\Controllers\ProjetController;
+use App\Http\Controllers\CertificatController;
+use App\Http\Controllers\TechnologieController;
+use App\Http\Controllers\BlogController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +25,11 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::get('/test', function(){
-    return 'test';
-});
+
+
+Route::resource('projets', ProjetController::class);
+Route::resource('certificats', CertificatController::class);
+Route::resource('technologies', TechnologieController::class);
+
+Route::resource('blogs', BlogController::class); 
+
