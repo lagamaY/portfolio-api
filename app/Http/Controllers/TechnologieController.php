@@ -91,9 +91,44 @@ class TechnologieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Technologie $technologie)
+    public function update(Request $request, $id)
     {
-        //
+        try{
+
+            $request->validate([
+          
+                'nom' => 'required|string|max:255',
+                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+               
+            ]);
+         
+
+            $technologies =  Technologie::find($id); 
+        
+            $technologies->nom = $request->nom;
+           
+                // Traitement de l'image 'image_accroche'
+                    
+            $image = $request->file('image');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images/technologies'), $imageName);
+
+            $technologies->image = $imageName;
+
+    
+            $technologies->update();
+    
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "Technologie Update avec succès",
+                "data" => $technologies
+            ]);
+
+        } catch(Exception $e){
+
+            return response()->json($e);
+        }
+        
     }
 
 

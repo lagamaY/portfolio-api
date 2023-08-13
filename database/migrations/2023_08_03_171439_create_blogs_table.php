@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('titre');
             $table->text('contenu');
             $table->string('image_accroche'); // Champ pour stocker l'URL de l'image d'accroche
-            $table->text('images_illustration')->nullable(); // Vous pouvez stocker les URLs des images d'illustration sous forme de JSON
             $table->timestamps();
         });
     }

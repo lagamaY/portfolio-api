@@ -58,12 +58,11 @@ class BlogController extends Controller
 
             $blog->image_accroche = $imageName;
 
-                // Traitement des images d'illustration
-            $blog->images_illustration = $request->illustration;
 
     
             $blog->save();
 
+            // Insertion de plusieurs images pour un article
 
             if ($request->hasFile('imagebs')) {
                 foreach ($request->file('imagebs') as $image) {
@@ -122,7 +121,7 @@ class BlogController extends Controller
      * 
      * Cette fonction a un PROBL7ME
      */
-    public function update(Request $request, Blog $blog)
+    public function update(Request $request, $id)
     {
         //
 
@@ -133,9 +132,9 @@ class BlogController extends Controller
                 'titre' => 'string|max:255',
                 'contenu' => 'string',
                 'image_accroche' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
-                'illustration' => 'nullable|string',  
             ]);
 
+            $blog = Blog::find($id);
             // dd($request->input());
             $blog->titre = $request->titre;
             $blog->contenu = $request->contenu;
@@ -148,16 +147,34 @@ class BlogController extends Controller
             $image->move(public_path('images/blogs'), $imageName);
 
             $blog->image_accroche = $imageName;
-
-                // Traitement des images d'illustration
-            $blog->images_illustration = $request->illustration;
     
-            $blog->update();
+           if( $blog->update()){
+
+             // Insertion de plusieurs images pour un article
+
+                if ($request->hasFile('imagebs')) {
+                    foreach ($request->file('imagebs') as $image) {
+                        $path = $image->store('blog_images', 'public');
+            
+                        $blog->imagebs()->create([
+                            'path' => $path,
+                        ]);
+                    }
+                }
+        } else
+        {
+            Return response()->json([
+
+                // "status_code" => 400,
+                "status_message" => "Article Non update",
+                "data" => $blog
+            ]);
+        }
 
             Return response()->json([
 
                 "status_code" => 200,
-                "status_message" => "Article mis à avec succès",
+                "status_message" => "Article update avec succès",
                 "data" => $blog
             ]);
 

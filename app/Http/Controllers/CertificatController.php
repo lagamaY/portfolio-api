@@ -95,9 +95,51 @@ class CertificatController extends Controller
      * Update the specified resource in storage.
      */
     
-    public function update(Request $request, Certificat $certificat)
+    public function update(Request $request, $id)
     {
-        //
+        
+
+        try{
+
+            $request->validate([
+          
+                'nom' => 'required|string|max:255',
+                'organisme' => 'required|string',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
+                'date_obtention' => 'required',  
+            ]);
+         
+
+            $certificats = Certificat::find($id);
+             
+            $certificats->nom = $request->nom;
+            $certificats->organisme = $request->organisme;
+           
+                // Traitement de l'image 'image_accroche'
+                    
+            $image = $request->file('image');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('images/certificats'), $imageName);
+
+            $certificats->image = $imageName;
+
+            // formatge de la date à gérer
+        
+            $certificats->date_obtention = $request->date_obtention;
+
+    
+            $certificats->update();
+    
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "Certificat Update avec succès",
+                "data" => $certificats
+            ]);
+
+        } catch(Exception $e){
+
+            return response()->json($e);
+        }
     }
 
 

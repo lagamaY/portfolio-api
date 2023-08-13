@@ -33,3 +33,9 @@ Route::resource('technologies', TechnologieController::class);
 
 Route::resource('blogs', BlogController::class); 
 
+// pour modifier un article dans la bd
+Route::post('projets/{id}', [ProjetController::class, 'update'] );
+Route::post('certificats/{id}', [CertificatController::class, 'update'] );
+Route::post('technologies/{id}', [TechnologieController::class, 'update'] );
+Route::post('blogs/{id}', [BlogController::class, 'update'] );
+
