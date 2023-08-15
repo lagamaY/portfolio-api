@@ -19,4 +19,9 @@ class ImageB extends Model
         return $this->belongsTo(Blog::class);
     }
 
+
+    public function utilisateurs(){
+
+        return $this->belongsTo(User::class);
+    }
 }

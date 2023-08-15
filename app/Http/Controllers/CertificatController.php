@@ -12,8 +12,23 @@ class CertificatController extends Controller
      */
     public function index()
     {
-        //
-        $certificats = Certificat::all();
+
+    
+        try{
+
+            $certificats = Certificat::paginate(10);
+            
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "succès",
+                "data" => $certificats
+            ]);
+            
+        } catch(Exception $e){
+            return response()->json($e);
+        }
+    
+            
     }
 
    
@@ -32,6 +47,7 @@ class CertificatController extends Controller
                 'organisme' => 'required|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
                 'date_obtention' => 'required',  
+                'user_id' => "required | integer "
             ]);
          
 
@@ -39,6 +55,7 @@ class CertificatController extends Controller
         
             $certificats->nom = $request->nom;
             $certificats->organisme = $request->organisme;
+            $certificats->user_id = $request->user_id;
            
                 // Traitement de l'image 'image_accroche'
                     
@@ -106,7 +123,8 @@ class CertificatController extends Controller
                 'nom' => 'required|string|max:255',
                 'organisme' => 'required|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
-                'date_obtention' => 'required',  
+                'date_obtention' => 'required', 
+                'user_id' => "required | integer " 
             ]);
          
 
@@ -114,6 +132,10 @@ class CertificatController extends Controller
              
             $certificats->nom = $request->nom;
             $certificats->organisme = $request->organisme;
+
+            // Id du user 
+            $certificats->user_id = $request->user_id;
+        
            
                 // Traitement de l'image 'image_accroche'
                     
@@ -123,7 +145,7 @@ class CertificatController extends Controller
 
             $certificats->image = $imageName;
 
-            // formatge de la date à gérer
+            // formatage de la date à gérer
         
             $certificats->date_obtention = $request->date_obtention;
 

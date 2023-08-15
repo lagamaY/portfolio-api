@@ -15,4 +15,9 @@ class Technologie extends Model
     {
         return $this->belongsToMany(Projet::class, 'projet_technologie');
     }
+
+    public function utilisateurs(){
+
+        return $this->belongsTo(User::class);
+    }
 }

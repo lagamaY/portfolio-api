@@ -15,7 +15,7 @@ class BlogController extends Controller
     {
         //
 
-        $blog = Blog::all();
+        $blog = Blog::paginate(10);
         
         return response()->json([
             "status_code" => 200,
@@ -41,7 +41,8 @@ class BlogController extends Controller
                 'titre' => 'required|string|max:255',
                 'contenu' => 'required|string',
                 'image_accroche' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
-                'illustrations' => 'nullable|string',  
+                // 'user_id' => "required | integer | 'exists:users, id'  "
+                'user_id' => "required | integer "
             ]);
          
 
@@ -50,7 +51,7 @@ class BlogController extends Controller
             $blog->titre = $request->titre;
             $blog->contenu = $request->contenu;
            
-                // Traitement de l'image 'image_accroche'
+             // Traitement de l'image 'image_accroche'
                     
             $image = $request->file('image_accroche');
             $imageName = time().'.'.$image->getClientOriginalExtension();
@@ -59,10 +60,12 @@ class BlogController extends Controller
             $blog->image_accroche = $imageName;
 
 
+
+            $blog->user_id = $request->user_id;
     
             $blog->save();
 
-            // Insertion de plusieurs images pour un article
+            // Insertion de plusieurs images d'illustration pour un article
 
             if ($request->hasFile('imagebs')) {
                 foreach ($request->file('imagebs') as $image) {
@@ -103,7 +106,6 @@ class BlogController extends Controller
 
             return response()->json([
                 "status_code" => 200,
-                "status_message" => "Article enregistré avec succès",
                 "data" => $blog, $imagebs
             ]);
 
@@ -132,12 +134,15 @@ class BlogController extends Controller
                 'titre' => 'string|max:255',
                 'contenu' => 'string',
                 'image_accroche' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Notez le nom du champ
+                'user_id' => "required | integer "
             ]);
 
             $blog = Blog::find($id);
             // dd($request->input());
             $blog->titre = $request->titre;
             $blog->contenu = $request->contenu;
+            $blog->user_id = $request->user_id;
+
 
                 // Traitement de l'image 'image_accroche'
                     

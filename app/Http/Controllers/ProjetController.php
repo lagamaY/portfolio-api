@@ -17,7 +17,7 @@ class ProjetController extends Controller
         
        try{
 
-        $projets = Projet::all();
+        $projets = Projet::paginate(10);
 
 
         return response()->json([
@@ -46,10 +46,11 @@ class ProjetController extends Controller
           
                 'nom' => 'required|string|max:255',
                 'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'lien' => 'nullable',
-                'description' => '',
-                'images' => '',
+                'lien' => 'required',
+                'description' => 'required | min:10',
                 'techno_utilisees' => 'required|array', // 404 lorsque j'ajoute required
+                'user_id' => "required | integer "
+                
             ]);
          
             // Comment faire un select sur insomnia ?
@@ -58,7 +59,8 @@ class ProjetController extends Controller
         
             $projets->nom = $request->nom;
            
-                // Traitement de l'image 'image_accroche'
+            $projets->user_id = $request->user_id;
+            // Traitement de l'image 'image_accroche'
                     
             $image = $request->file('logo');
             $imageName = time().'.'.$image->getClientOriginalExtension();
@@ -68,7 +70,6 @@ class ProjetController extends Controller
 
             $projets->lien = $request->lien;
             $projets->description = $request->description;
-            $projets->images= $request->images;
             
 
     
@@ -142,8 +143,8 @@ class ProjetController extends Controller
                 'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'lien' => 'nullable',
                 'description' => '',
-                'images' => '',
                 'techno_utilisees' => 'required|array', // 404 lorsque j'ajoute required
+                'user_id' => "required | integer "
             ]);
          
 
@@ -151,6 +152,8 @@ class ProjetController extends Controller
         
             $projets->nom = $request->nom;
            
+            $projets->user_id = $request->user_id;
+
                 // Traitement de l'image 'image_accroche'
                     
             $image = $request->file('logo');
@@ -161,7 +164,6 @@ class ProjetController extends Controller
 
             $projets->lien = $request->lien;
             $projets->description = $request->description;
-            $projets->images= $request->images;
             
 
     
@@ -183,7 +185,7 @@ class ProjetController extends Controller
     
             return response()->json([
                 "status_code" => 200,
-                "status_message" => "Projet enregistré avec succès",
+                "status_message" => "Projet Update avec succès",
                 "data" =>  $projets
                 
             ]);

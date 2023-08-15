@@ -21,5 +21,10 @@ class Projet extends Model
         return $this->hasMany(Imagep::class);
     }
     
+
+    public function utilisateurs(){
+
+        return $this->belongsTo(User::class);
+    }
     
 }

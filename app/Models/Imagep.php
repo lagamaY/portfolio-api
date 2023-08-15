@@ -18,4 +18,9 @@ class Imagep extends Model
     {
         return $this->belongsTo(Projet::class);
     }
+
+    public function utilisateurs(){
+
+        return $this->belongsTo(User::class);
+    }
 }

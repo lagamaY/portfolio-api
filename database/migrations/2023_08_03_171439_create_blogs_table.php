@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('titre');
             $table->text('contenu');
             $table->string('image_accroche'); // Champ pour stocker l'URL de l'image d'accroche
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

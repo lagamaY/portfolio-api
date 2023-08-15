@@ -16,6 +16,9 @@ class Blog extends Model
         return $this->hasMany(ImageB::class);
     }
     
+    public function auteurs(){
 
+        return $this->belongsTo(User::class);
+    }
 
 }

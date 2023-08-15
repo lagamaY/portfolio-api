@@ -12,7 +12,24 @@ class TechnologieController extends Controller
      */
     public function index()
     {
-        $technologies = Technologie::all();
+
+        try{
+
+            $technologies = Technologie::paginate(10);
+
+            
+            return response()->json([
+                "status_code" => 200,
+                "status_message" => "succès",
+                "data" => $technologies
+            ]);
+
+        }catch(Exception $e){
+
+            return response()->json($e);
+        }
+            
+        
     }
 
 
@@ -29,13 +46,16 @@ class TechnologieController extends Controller
           
                 'nom' => 'required|string|max:255',
                 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-               
+                'user_id' => "required | integer "
             ]);
          
 
             $technologies =  new Technologie(); 
         
             $technologies->nom = $request->nom;
+
+            $technologies->user_id = $request->user_id;
+            
            
                 // Traitement de l'image 'image_accroche'
                     
@@ -67,16 +87,17 @@ class TechnologieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Technologie $technologie)
+    public function show($id)
     {
         
         try{
 
-            $technologie;
+            $technologie = Technologie::find($id);
+            
 
             return response()->json([
                 "status_code" => 200,
-                "status_message" => "Technologie identifiée avec succès",
+                "status_message" => " succès",
                 "data" => $technologie
             ]);
 
@@ -99,13 +120,16 @@ class TechnologieController extends Controller
           
                 'nom' => 'required|string|max:255',
                 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-               
+                'user_id' => "required | integer "
             ]);
          
 
             $technologies =  Technologie::find($id); 
         
             $technologies->nom = $request->nom;
+
+            $technologies->user_id = $request->user_id;
+
            
                 // Traitement de l'image 'image_accroche'
                     
@@ -137,9 +161,13 @@ class TechnologieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Technologie $technologie)
+    public function destroy($id)
     {
+
+
         try{
+
+            $technologie = Technologie::find($id); 
             
             $technologie->delete();
 
@@ -152,5 +180,5 @@ class TechnologieController extends Controller
         }catch(Exception $e){
             return response()->json($e);
         }
-    }
+     }
 }

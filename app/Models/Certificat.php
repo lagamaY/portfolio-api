@@ -10,4 +10,9 @@ class Certificat extends Model
     use HasFactory;
 
     protected $fillable = ['nom', 'organisme', 'image','date_obtention'];
+
+    public function utilisateurs(){
+
+        return $this->belongsTo(User::class);
+    }
 }
